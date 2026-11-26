@@ -1,6 +1,5 @@
 # Real Estate Research & Valuation
-
-This project is a Google Places API (New)-only real estate business discovery tool. The original E: workspace contained no prior project files, data, model, or UI to carry forward.
+A comprehensive, data-driven Real Estate Research and Valuation platform designed to simplify property market research, real estate business discovery, location-based analysis, and structured data management. The system integrates Google Places API (New) to identify and collect relevant real estate business information, including property agents, dealers, agencies, consultants, developers, builders, and property management services across selected countries, cities, and geographical areas.
 
 ## Scope and data integrity
 
