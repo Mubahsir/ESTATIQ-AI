@@ -1,0 +1,13 @@
+"""Evidence-safe Markdown report generation; no price inference from business discovery."""
+from datetime import datetime, timezone
+
+def build_report(requirements, businesses):
+    loc=', '.join(x for x in [requirements.get('area'),requirements.get('city'),requirements.get('country')] if x)
+    lines=[f"# Property research report — {loc or 'Location not specified'}", '', f"Generated (UTC): {datetime.now(timezone.utc).isoformat()}", '', '## Executive summary', f"- Property: {requirements.get('property_type','Not specified')}",f"- Purpose: {requirements.get('transaction','Not specified')}",f"- Requirements: {requirements.get('specifications',{})}",f"- Size entered: {requirements.get('size') or 'Not provided'} {requirements.get('measurement','')}",'', '## Valuation and listings', '- Property listings, asking prices, verified transactions, rental prices, and price trends: **Unavailable**. The configured source is Google Places API, which provides place and business information and does not provide a property listings or transaction dataset.', '- Market value and valuation range: **Not calculated**. Google Places business discovery alone is not comparable-property price evidence.', '- Price per unit area, rental estimate, and yield: **Unavailable**.', '', '## Google Places business discovery', f"- Matching saved businesses: {len(businesses)}"]
+    if businesses:
+        lines += ['', '| Business | Address | Rating | Review count | Website | Google Maps |', '|---|---|---:|---:|---|---|']
+        for b in businesses:
+            def esc(v): return str(v or 'Unavailable').replace('|','\\|').replace('\n',' ')
+            lines.append('| '+' | '.join(esc(b.get(k)) for k in ['Business','Address','Rating','Review count','Website','Google Maps'])+' |')
+    lines += ['', '## Method and limits', '- All business records shown here are returned by Google Places API (New). Collection timestamps and originating query are stored in SQLite.', '- Google Place ratings and review counts reflect Google data. They are not independently verified market statistics.', '- Google may return a limited number of pages for a text query; completion means all pages exposed for the submitted query were traversed, not that all businesses or the internet were exhaustively searched.', '- No external listing portal, property marketplace, web-search provider, or non-Google data API is integrated.', '- Before estimating value, provide a permitted Google source that actually supplies comparable property asking or transaction prices. Do not use dealer presence or reputation as price evidence.']
+    return '\n'.join(lines)
